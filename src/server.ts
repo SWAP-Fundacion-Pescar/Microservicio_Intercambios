@@ -4,5 +4,5 @@ const port = process.env.PORT || 3002;
 
 app.listen(port, () => 
     {
-        console.log('Se ha iniciado el servidor');
+        console.log(`Se ha iniciado el servidor en el puerto ${port}`);
     });

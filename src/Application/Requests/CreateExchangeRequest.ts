@@ -1,4 +1,4 @@
-class CreateExchangeRequest
+class CreateExchangeRequest //modelo para creación de solicitud de intercambio 
 {
     senderUserId: string;
     senderClotheId: string;

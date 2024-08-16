@@ -14,5 +14,18 @@ const exchangeController: ExchangeController = new ExchangeController(exchangeSe
 
 const exchangeRouter = Router();
 
-exchangeRouter.post('/exchange', exchangeController.createExchange);
+exchangeRouter.get('/', (req,res)=>{
+    // res.json('Hola, estoy conectado!') //funcionando
+    res.status(200).send('Hola') //funcionando - con send() envio objeto - requiere status
+})
+
+exchangeRouter.post('/exchange', exchangeController.createExchange);//path + callback
+exchangeRouter.get('/exchange/:exchangeId', exchangeController.getExchangeById) 
+exchangeRouter.get('/exchange/user/:userId', exchangeController.getExchangeByUserId)
+exchangeRouter.get('/exchange/clothe/:clotheId', exchangeController.getExchangeByClotheId)
+
+exchangeRouter.put('/exchange/changeState', exchangeController.changeState)
+
+
+
 export default exchangeRouter;
