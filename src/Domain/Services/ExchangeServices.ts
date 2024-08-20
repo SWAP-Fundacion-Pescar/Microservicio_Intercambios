@@ -5,6 +5,7 @@ import IExchangeQuery from "../../Infrastructure/Interfaces/IExchangeQuery";
 import CreateExchangeDTO from "../DTO/CreateExchangeDTO";
 import Exchange from "../Entities/Exchange";
 import IExchangeServices from "../Interfaces/IExchangeServices";
+import UpdateStateRequest from "../../Application/Requests/UpdateStateRequest";
 
 class ExchangeServices implements IExchangeServices
 {
@@ -18,24 +19,28 @@ class ExchangeServices implements IExchangeServices
 
     async createExchange(createExchangeRequest: CreateExchangeRequest): Promise<Exchange> {
         const state: string = 'En proceso';
-        const createExchangeDTO: CreateExchangeDTO = new CreateExchangeDTO(createExchangeRequest.senderUserId, createExchangeRequest.senderClotheId, createExchangeRequest.receiverUserId, createExchangeRequest.receiverClotheId, state);
-        const createdExchange: Exchange = await this.exchangeCommand.createExchange(createExchangeDTO);
+        const createExchangeDTO: CreateExchangeDTO = new CreateExchangeDTO(createExchangeRequest.senderUserId, createExchangeRequest.senderClotheId, createExchangeRequest.receiverUserId, createExchangeRequest.receiverClotheId, state); //objeto de solicitud
+        const createdExchange: Exchange = await this.exchangeCommand.createExchange(createExchangeDTO); //objeto de intercambio 
         return createdExchange;
     }
     deleteExchange(exchangeId: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
-    changeState(state: string): Promise<IExchangeDocument> {
-        throw new Error("Method not implemented.");
+    async changeState(updateStateRequest: UpdateStateRequest): Promise<IExchangeDocument> {
+        const updatedStateExchange : IExchangeDocument = await this.exchangeCommand.changeState(updateStateRequest)
+        return updatedStateExchange;
     }
-    getExchangeById(exchangeId: string): Promise<IExchangeDocument> {
-        throw new Error("Method not implemented.");
+    async getExchangeById(exchangeId: string): Promise<IExchangeDocument> {
+        const retrievedExchange: IExchangeDocument = await this.exchangeQuery.getExchangeById(exchangeId);
+        return retrievedExchange;
     }
-    getExchangeByUserId(userId: string): Promise<Array<IExchangeDocument>> {
-        throw new Error("Method not implemented.");
+    async getExchangeByUserId(userId: string): Promise<Array<IExchangeDocument>> {
+        const retrievedUsers: Array<IExchangeDocument> | null = await this.exchangeQuery.getExchangeByUserId(userId);
+        return retrievedUsers;
     }
-    getExchangeByClotheId(clotheId: string): Promise<IExchangeDocument> {
-        throw new Error("Method not implemented.");
+    async getExchangeByClotheId(clotheId: string): Promise<IExchangeDocument> {
+        const retrievedClothe: IExchangeDocument = await this.exchangeQuery.getExchangeByClotheId(clotheId);
+        return retrievedClothe;
     }    
 }
 export default ExchangeServices;

@@ -10,12 +10,12 @@ class ExchangeQuery implements IExchangeQuery
         return retrievedExchange
     }
     async getExchangeByUserId(userId: string): Promise<Array<IExchangeDocument>> {
-        const retrievedUsers : Array<IExchangeDocument> | null = await exchangeModel.findOne({ senderUserId : userId });
+        const retrievedUsers : Array<IExchangeDocument> | null = await exchangeModel.findOne({$or: [{senderUserId : userId}, {receiverUserId: userId}]});
         if(!retrievedUsers) throw new Error('Este usuario no tiene intercambios activos');
         return retrievedUsers
     }
     async getExchangeByClotheId(clotheId: string): Promise<IExchangeDocument> {
-        const retrievedClothe : IExchangeDocument | null = await exchangeModel.findOne({ senderClotheId : clotheId });
+        const retrievedClothe : IExchangeDocument | null = await exchangeModel.findOne({$or: [{senderClotheId : clotheId}, {receiverClotheId: clotheId}]});
         if(!retrievedClothe) throw new Error('Ha ocurrido un error. La prenda buscada no está disponible');
         return retrievedClothe
     }    
