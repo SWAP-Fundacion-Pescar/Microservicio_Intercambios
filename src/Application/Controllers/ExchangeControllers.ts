@@ -5,9 +5,6 @@ import CreateExchangeRequest from '../Requests/CreateExchangeRequest';
 import UpdateStateRequest from '../Requests/UpdateStateRequest';
 import Exchange from '../../Domain/Entities/Exchange';
 
-import ExchangeQuery from '../../Infrastructure/Query/ExchangeQuery';
-
-
 class ExchangeController
 {
     private exchangeServices: IExchangeServices;
@@ -15,10 +12,10 @@ class ExchangeController
     {
         this.exchangeServices = exchangeServices;
         this.createExchange = this.createExchange.bind(this);
-        this.changeState = this.changeState.bind(this);
         this.getExchangeById = this.getExchangeById.bind(this);
         this.getExchangeByUserId = this.getExchangeByUserId.bind(this);
         this.getExchangeByClotheId = this.getExchangeByClotheId.bind(this);
+        this.changeState = this.changeState.bind(this);
         this.deleteExchange = this.deleteExchange.bind(this);
     }
     async createExchange( req: Request, res: Response, next: NextFunction ): Promise<void> { //método asíncrono
@@ -34,7 +31,7 @@ class ExchangeController
             await this.exchangeServices.deleteExchange(id) 
             res.status(200).send('ok')
         }catch (err){
-            console.error(err)
+            next(err);
         }
     }
     async changeState( req: Request, res: Response, next: NextFunction ): Promise<void> {
@@ -47,7 +44,7 @@ class ExchangeController
             const changedState : IExchangeDocument = await this.exchangeServices.changeState(updateStateRequest);
             res.status(200).send(changedState)
         }catch(err){
-            console.error(err);
+            next(err);
         }
     }
     async getExchangeById(req: Request, res: Response, next: NextFunction): Promise<void> { //debería ser: Promise<IExchangeDocument>
@@ -56,7 +53,7 @@ class ExchangeController
             const retrievedExchange : IExchangeDocument = await this.exchangeServices.getExchangeById(req.params.exchangeId) //Uso el método traído de los servicios y le paso el id obtenido por params
             res.status(200).send(retrievedExchange)
         }catch(err){
-            console.error(err)
+            next(err);
         }
     }
     async getExchangeByUserId(req: Request, res: Response, next: NextFunction): Promise<void>{ //debería ser: Promise<Array<IExchangeDocument>>
@@ -64,7 +61,7 @@ class ExchangeController
             const retrievedUsers : Array<IExchangeDocument> | null = await this.exchangeServices.getExchangeByUserId(req.params.userId) 
             res.status(200).send(retrievedUsers)
         }catch(err){
-            console.error(err)
+            next(err);
         }
     }
     async getExchangeByClotheId(req: Request, res: Response, next: NextFunction): Promise<void> { //debería ser: Promise<IExchangeDocument>
@@ -72,7 +69,7 @@ class ExchangeController
             const retrievedClothe : IExchangeDocument | null = await this.exchangeServices.getExchangeByClotheId(req.params.clotheId) 
             res.status(200).send(retrievedClothe)
         }catch(err){
-            console.error(err)
+            next(err);
         }
     }
 }

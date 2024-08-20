@@ -3,6 +3,7 @@ import IExchangeCommand from "../Interfaces/IExchangeCommand";
 import IExchangeDocument from "../Interfaces/IExchangeDocument";
 import exchangeModel from "../Persistence/Models/ExchangeModel";
 import UpdateStateRequest from "../../Application/Requests/UpdateStateRequest";
+import NotFoundException from "../../Application/Exceptions/NotFoundException";
 
 class ExchangeCommand implements IExchangeCommand
 {
@@ -13,14 +14,14 @@ class ExchangeCommand implements IExchangeCommand
     }     
     async deleteExchange(exchangeId: string): Promise<void> {
         const retrievedExchange : IExchangeDocument | null = await exchangeModel.findByIdAndDelete(exchangeId)
-        if(!retrievedExchange) throw new Error("No se encontró el intercambio.");
+        if(!retrievedExchange) throw new NotFoundException('No se encontró el intercambio.');
     }
     async changeState(updateStateRequest: UpdateStateRequest): Promise<IExchangeDocument> {
         const retrievedExchange : IExchangeDocument | null = await exchangeModel.findByIdAndUpdate(updateStateRequest.id, updateStateRequest, {new:true})
         if(retrievedExchange) {
             return retrievedExchange
         }else{
-            throw new Error("No se encontró el intercambio.");
+            throw new NotFoundException('No se encontró el intercambio.');
         }
     }       
 }
