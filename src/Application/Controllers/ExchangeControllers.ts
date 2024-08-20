@@ -19,6 +19,7 @@ class ExchangeController
         this.getExchangeById = this.getExchangeById.bind(this);
         this.getExchangeByUserId = this.getExchangeByUserId.bind(this);
         this.getExchangeByClotheId = this.getExchangeByClotheId.bind(this);
+        this.deleteExchange = this.deleteExchange.bind(this);
     }
     async createExchange( req: Request, res: Response, next: NextFunction ): Promise<void> { //método asíncrono
         const { senderUserId, senderClotheId, receiverUserId, receiverClotheId }: CreateExchangeRequest = req.body; //extraigo datos de la solicitud y digo que son de tipo "createExchangeRequest" (modelo de solicitud). ¿Acá se verifican los tipos de datos?
@@ -27,12 +28,18 @@ class ExchangeController
         console.log(createExchangeRequest);
         res.status(200).send(createdExchange);
     }
-    deleteExchange(exchangeId: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async deleteExchange(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try{
+            const id : string = req.params.exchangeId;
+            await this.exchangeServices.deleteExchange(id) 
+            res.status(200).send('ok')
+        }catch (err){
+            console.error(err)
+        }
     }
     async changeState( req: Request, res: Response, next: NextFunction ): Promise<void> {
         try{
-            const {id, state} : IExchangeDocument= req.body;
+            const {id, state} : UpdateStateRequest = req.body;
             const updateStateRequest: UpdateStateRequest = {
                 id: id,
                 state: state

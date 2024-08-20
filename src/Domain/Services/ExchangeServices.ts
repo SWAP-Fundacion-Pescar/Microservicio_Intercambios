@@ -23,8 +23,8 @@ class ExchangeServices implements IExchangeServices
         const createdExchange: Exchange = await this.exchangeCommand.createExchange(createExchangeDTO); //objeto de intercambio 
         return createdExchange;
     }
-    deleteExchange(exchangeId: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async deleteExchange(exchangeId: string): Promise<void> {
+        await this.exchangeCommand.deleteExchange(exchangeId);
     }
     async changeState(updateStateRequest: UpdateStateRequest): Promise<IExchangeDocument> {
         const updatedStateExchange : IExchangeDocument = await this.exchangeCommand.changeState(updateStateRequest)

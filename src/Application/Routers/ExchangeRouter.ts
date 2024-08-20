@@ -25,6 +25,7 @@ exchangeRouter.get('/exchange/user/:userId', exchangeController.getExchangeByUse
 exchangeRouter.get('/exchange/clothe/:clotheId', exchangeController.getExchangeByClotheId)
 
 exchangeRouter.put('/exchange/changeState', exchangeController.changeState)
+exchangeRouter.delete('/exchange/delete/:exchangeId', exchangeController.deleteExchange)
 
 
 

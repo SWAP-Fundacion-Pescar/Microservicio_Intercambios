@@ -11,8 +11,9 @@ class ExchangeCommand implements IExchangeCommand
         await createdExchange.save();
         return createdExchange;
     }     
-    deleteExchange(exchangeId: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async deleteExchange(exchangeId: string): Promise<void> {
+        const retrievedExchange : IExchangeDocument | null = await exchangeModel.findByIdAndDelete(exchangeId)
+        if(!retrievedExchange) throw new Error("No se encontró el intercambio.");
     }
     async changeState(updateStateRequest: UpdateStateRequest): Promise<IExchangeDocument> {
         const retrievedExchange : IExchangeDocument | null = await exchangeModel.findByIdAndUpdate(updateStateRequest.id, updateStateRequest, {new:true})
