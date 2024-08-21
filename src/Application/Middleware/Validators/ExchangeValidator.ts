@@ -2,7 +2,7 @@ import {body} from 'express-validator';
 
 const validateCreateExchange = [
     body('senderUserId').isString().withMessage('Sender User ID debe ser un string'),
-    body('senderReceiverId').isString().withMessage('Receiver User ID debe ser un string'),
+    body('receiverUserId').isString().withMessage('Receiver User ID debe ser un string'),
     body('senderClotheId').isString().withMessage('Sender Clothe Id debe ser un string'),
     body('receiverClotheId').isString().withMessage('Receiver Clothe Id debe ser un string')
 ]

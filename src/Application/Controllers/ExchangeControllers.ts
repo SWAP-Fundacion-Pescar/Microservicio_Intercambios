@@ -4,13 +4,23 @@ import IExchangeDocument from "../../Infrastructure/Interfaces/IExchangeDocument
 import CreateExchangeRequest from '../Requests/CreateExchangeRequest';
 import UpdateStateRequest from '../Requests/UpdateStateRequest';
 import Exchange from '../../Domain/Entities/Exchange';
+import ClotheMicroserviceClient from '../../Infrastructure/Clients/ClotheMicroserviceClient';
+import UnauthorizedException from '../Exceptions/UnauthorizedException';
+import NotFoundException from '../Exceptions/NotFoundException';
+import axios, {AxiosResponse} from 'axios';
+
+interface User{
+    id:string;
+}
 
 class ExchangeController
 {
     private exchangeServices: IExchangeServices;
-    constructor(exchangeServices: IExchangeServices)
+    private clotheMicroserviceClient : ClotheMicroserviceClient;
+    constructor(exchangeServices: IExchangeServices, clotheMicroserviceClient: ClotheMicroserviceClient)
     {
         this.exchangeServices = exchangeServices;
+        this.clotheMicroserviceClient = clotheMicroserviceClient;
         this.createExchange = this.createExchange.bind(this);
         this.getExchangeById = this.getExchangeById.bind(this);
         this.getExchangeByUserId = this.getExchangeByUserId.bind(this);
@@ -19,11 +29,24 @@ class ExchangeController
         this.deleteExchange = this.deleteExchange.bind(this);
     }
     async createExchange( req: Request, res: Response, next: NextFunction ): Promise<void> { //método asíncrono
-        const { senderUserId, senderClotheId, receiverUserId, receiverClotheId }: CreateExchangeRequest = req.body; //extraigo datos de la solicitud y digo que son de tipo "createExchangeRequest" (modelo de solicitud). ¿Acá se verifican los tipos de datos?
-        const createExchangeRequest: CreateExchangeRequest = new CreateExchangeRequest(senderUserId, senderClotheId, receiverUserId, receiverClotheId) //instancio "CreateExchangeRequest" con los datos extraidos: creo solicitud con la que consulto DB
-        const createdExchange: Exchange = await this.exchangeServices.createExchange(createExchangeRequest);//para crear un intercambio, paso como parámetro la solicitud de intercambio 
-        console.log(createExchangeRequest);
-        res.status(200).send(createdExchange);
+        try {
+            const user = req.user as User;
+            const { senderUserId, senderClotheId, receiverUserId, receiverClotheId }: CreateExchangeRequest = req.body; //extraigo datos de la solicitud y digo que son de tipo "createExchangeRequest" (modelo de solicitud). ¿Acá se verifican los tipos de datos?
+            const retrievedSenderClothe : AxiosResponse = await this.clotheMicroserviceClient.getClotheById(senderClotheId);
+            const retrievedReceiverClothe : AxiosResponse = await this.clotheMicroserviceClient.getClotheById(receiverClotheId);
+            console.log(retrievedReceiverClothe.data)
+            if (retrievedSenderClothe.data.userId != senderUserId) {
+                throw new UnauthorizedException('El usuario que quiere crear el intercambio no es el mismo que el dueño de la prenda.')
+            }else if(retrievedReceiverClothe.data.userId != receiverUserId){
+                throw new UnauthorizedException('El usuario que quiere aceptar el intercambio no es el mismo que el dueño de la prenda.')
+            }
+            const createExchangeRequest: CreateExchangeRequest = new CreateExchangeRequest(senderUserId, senderClotheId, receiverUserId, receiverClotheId) //instancio "CreateExchangeRequest" con los datos extraidos: creo solicitud con la que consulto DB
+            const createdExchange: Exchange = await this.exchangeServices.createExchange(createExchangeRequest);//para crear un intercambio, paso como parámetro la solicitud de intercambio 
+            console.log(createExchangeRequest);
+            res.status(200).send(createdExchange);
+        }catch (err){
+            next(err);
+        }
     }
     async deleteExchange(req: Request, res: Response, next: NextFunction): Promise<void> {
         try{
