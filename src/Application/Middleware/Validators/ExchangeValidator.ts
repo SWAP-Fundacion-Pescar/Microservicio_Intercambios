@@ -1,4 +1,4 @@
-import {body} from 'express-validator';
+import {body, param} from 'express-validator';
 
 const validateCreateExchange = [
     body('senderUserId').isString().withMessage('Sender User ID debe ser un string'),
@@ -12,7 +12,7 @@ const validateUpdateExchange = [
 ]
 
 const validateDeleteExchange = [
-    body('exchangeId').isString().withMessage('exchangeId debe ser un string'),
+    param('exchangeId').isString().withMessage('exchangeId debe ser un string'),
 ]
 
 export {validateCreateExchange, validateUpdateExchange, validateDeleteExchange};
