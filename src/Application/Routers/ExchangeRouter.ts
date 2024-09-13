@@ -11,12 +11,14 @@ import validationErrorHandler from "../Middleware/Validators/ValidationErrorHand
 import { authenticateJwt } from "../Middleware/PassportMiddleware";
 import ClotheMicroserviceClient from "../../Infrastructure/Clients/ClotheMicroserviceClient";
 import UserMicroserviceClient from "../../Infrastructure/Clients/UserMicroserviceClient";
+import NotificationClientMicroservice from "../../Infrastructure/Clients/NotificationMicroserviceClient";
 
 const clotheMicroserviceClient : ClotheMicroserviceClient = new ClotheMicroserviceClient();
 const userMicroserviceClient : UserMicroserviceClient = new UserMicroserviceClient();
 const exchangeCommand: IExchangeCommand = new ExchangeCommand();
 const exchangeQuery: IExchangeQuery = new ExchangeQuery();
-const exchangeServices: IExchangeServices = new ExchangeServices(exchangeCommand, exchangeQuery);
+const notificationClient: NotificationClientMicroservice = new NotificationClientMicroservice();
+const exchangeServices: IExchangeServices = new ExchangeServices(exchangeCommand, exchangeQuery, notificationClient);
 const exchangeController: ExchangeController = new ExchangeController(exchangeServices, clotheMicroserviceClient, userMicroserviceClient);
 
 const exchangeRouter = Router();

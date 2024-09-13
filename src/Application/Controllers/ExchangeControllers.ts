@@ -44,7 +44,8 @@ class ExchangeController
                 throw new UnauthorizedException('El usuario que quiere aceptar el intercambio no es el mismo que el dueño de la prenda.')
             }
             const createExchangeRequest: CreateExchangeRequest = new CreateExchangeRequest(user.id, senderClotheId, receiverUserId, receiverClotheId) //instancio "CreateExchangeRequest" con los datos extraidos: creo solicitud con la que consulto DB
-            const createdExchange: Exchange = await this.exchangeServices.createExchange(createExchangeRequest);//para crear un intercambio, paso como parámetro la solicitud de intercambio 
+            if(!req.headers.authorization) throw new UnauthorizedException('No esta autorizado');
+            const createdExchange: Exchange = await this.exchangeServices.createExchange(createExchangeRequest, req.headers.authorization);//para crear un intercambio, paso como parámetro la solicitud de intercambio 
             res.status(200).send(createdExchange);
         }catch (err){
             next(err);

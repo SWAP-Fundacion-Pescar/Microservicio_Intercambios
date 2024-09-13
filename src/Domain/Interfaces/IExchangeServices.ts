@@ -5,7 +5,7 @@ import Exchange from "../Entities/Exchange";
 
 interface IExchangeServices
 {
-    createExchange(createExchangeRequest: CreateExchangeRequest): Promise<Exchange>; //nombre de método + qué recibe y tipo de dato + qué devuelve y tipo de dato
+    createExchange(createExchangeRequest: CreateExchangeRequest, authorization: string): Promise<Exchange>; //nombre de método + qué recibe y tipo de dato + qué devuelve y tipo de dato
     deleteExchange(exchangeId: string): Promise<void>;
     changeState(updateStateRequest: UpdateStateRequest): Promise<IExchangeDocument>;
 
