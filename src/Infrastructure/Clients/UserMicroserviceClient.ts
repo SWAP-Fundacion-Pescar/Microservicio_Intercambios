@@ -4,7 +4,7 @@ import NotFoundException from '../../Application/Exceptions/NotFoundException';
 class UserMicroserviceClient{
     async getUserById (userId:string) : Promise<AxiosResponse>{
         try {
-            const response = await axios.get(`http://localhost:3000/api/users/${userId}`);
+            const response = await axios.get(`https://microservicio-usuarios-three.vercel.app/api/users/${userId}`);
                 return response;
         } catch (err:any){
             if (err.response.status == 404) {

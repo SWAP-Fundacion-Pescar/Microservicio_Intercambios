@@ -7,7 +7,7 @@ interface IExchangeServices
 {
     createExchange(createExchangeRequest: CreateExchangeRequest, authorization: string): Promise<Exchange>; //nombre de método + qué recibe y tipo de dato + qué devuelve y tipo de dato
     deleteExchange(exchangeId: string): Promise<void>;
-    changeState(updateStateRequest: UpdateStateRequest): Promise<IExchangeDocument>;
+    changeState(updateStateRequest: UpdateStateRequest, authorization: string): Promise<IExchangeDocument>;
 
     getExchangeById(exchangeId: string): Promise<IExchangeDocument>;
     getExchangeByUserId(userId: string): Promise<Array<IExchangeDocument>>;

@@ -73,7 +73,8 @@ class ExchangeController
             }
             const retreivedExchange = await this.exchangeServices.getExchangeById(id as string);
             if(retreivedExchange.senderUserId != user.id && retreivedExchange.receiverUserId != user.id) throw new UnauthorizedException('El usuario no pertenece al intercambio. ')
-            const changedState : IExchangeDocument = await this.exchangeServices.changeState(updateStateRequest);
+            if(!req.headers.authorization) throw new UnauthorizedException('No esta autorizado');
+            const changedState : IExchangeDocument = await this.exchangeServices.changeState(updateStateRequest, req.headers.authorization);
             res.status(200).send(changedState)
         }catch(err){
             next(err);

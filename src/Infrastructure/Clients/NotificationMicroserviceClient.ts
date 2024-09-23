@@ -8,7 +8,7 @@ class NotificationClientMicroservice {
             'Content-Type': 'application/json',
             'Authorization': authorization
         }
-        const response = await axios.post(`http://localhost:3004/api/notification`, notificationRequest,
+        const response = await axios.post(`https://microservicio-notificaciones.onrender.com/api/notification`, notificationRequest,
             {
                 headers: headers
             });

@@ -6,7 +6,7 @@ class ClotheMicroserviceClient{
     
     async getClotheById (clotheId:string) : Promise<AxiosResponse>{
         try {
-            const response = await axios.get(`http://localhost:3001/api/clothes/${clotheId}`);
+            const response = await axios.get(`https://microservicio-prendas.vercel.app/api/clothes/${clotheId}`);
                 return response;
         } catch (err:any){
             if (err.response.status == 404) {

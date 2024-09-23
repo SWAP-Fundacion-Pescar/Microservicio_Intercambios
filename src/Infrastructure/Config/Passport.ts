@@ -11,7 +11,7 @@ const opts = {
 passport.use(new JwtStrategy(opts, async (jwtPayload, done) => {
     try
     {
-        const response = await axios.get(`http://localhost:3000/api/users/${jwtPayload.id}`);
+        const response = await axios.get(`https://microservicio-usuarios-three.vercel.app/api/users/${jwtPayload.id}`);
         if (response) {
             return done(null, response.data);
         }
